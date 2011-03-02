@@ -18,6 +18,13 @@ $(document).ready(function () {
   var send = function (x1, y1, x2, y2) {
     socket.send(JSON.stringify([x1, y1, x2, y2]));
   }
+  var clear = function () {
+    socket.send('cls');
+  }
+  $('#clearBtn').click(function () {
+    ctx.clearRect(0, 0, 640, 480);
+    clear();
+  });
   $('#canvas').mousedown(function (e) {
     flg = true;
     oldX = e.pageX - $('#canvas').position().left;
@@ -36,7 +43,12 @@ $(document).ready(function () {
     oldY = y;
   });
   socket.on('message', function(data){
-    var pos = JSON.parse(data);
-    draw(pos[0], pos[1], pos[2], pos[3]);
+    console.log(data);
+    if (data == 'cls') {
+      ctx.clearRect(0, 0, 640, 480);
+    } else {
+      var pos = JSON.parse(data);
+      draw(pos[0], pos[1], pos[2], pos[3]);
+    }
   });
 });
